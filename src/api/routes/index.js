@@ -1,3 +1,4 @@
-import user from './user';
+import members from './members';
+import activities from './activities';
 
-export { user };
+export { members, activities };

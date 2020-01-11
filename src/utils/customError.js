@@ -1,7 +1,6 @@
 export default class CustomError extends Error {
-  constructor(message, errorType, statusCode = 500) {
+  constructor(message, errorType) {
     super(message);
-    this.statusCode = statusCode;
     this.errorType = errorType;
 
     if (Error.captureStackTrace) {

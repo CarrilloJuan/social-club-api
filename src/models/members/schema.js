@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 
 export default {
-  register: Joi.object({
+  create: Joi.object({
     name: Joi.string()
       .alphanum()
       .min(3)
@@ -22,9 +22,6 @@ export default {
     address: Joi.string(),
   }),
   update: Joi.object({
-    id: Joi.string()
-      .guid()
-      .required(),
     name: Joi.string()
       .alphanum()
       .min(3)
@@ -40,12 +37,7 @@ export default {
     email: Joi.string().email(),
     address: Joi.string(),
   }),
-  remove: Joi.object({
-    id: Joi.string()
-      .guid()
-      .required(),
-  }),
-  get: Joi.object({
+  uuid: Joi.object({
     id: Joi.string()
       .guid()
       .required(),

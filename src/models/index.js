@@ -1,3 +1,4 @@
-import userModel from './user';
+import membersModel from './members';
+import activitiesModel from './activities';
 
-export { userModel };
+export { membersModel, activitiesModel };

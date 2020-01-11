@@ -1,8 +1,9 @@
-import { user } from './routes';
+import { members, activities } from './routes';
 import express from 'express';
 
 const app = express();
 
-app.use('/user', user);
+app.use('/members', members);
+app.use('/activities', activities);
 
 export default app;
