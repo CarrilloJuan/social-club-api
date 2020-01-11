@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import helmet from 'helmet';
 import { errorHandler, fatalError, logger } from './utils';
 import routes from './api';
 
@@ -12,6 +13,7 @@ async function startServer() {
   const app = express();
 
   app.use(bodyParser.json());
+  app.use(helmet());
   app.use(morgan('combined', { stream: logger.stream }));
   app.use(routes);
   app.use(errorHandler);
