@@ -1,9 +1,18 @@
-import BasicModelOperations from '../basicModelOperations';
+import db from '../../db';
+import CommonsModelOperations from '../commons';
 
-class ActivitiesModel extends BasicModelOperations {
-  constructor(collectionName) {
-    super(collectionName);
+class ActivitiesModel extends CommonsModelOperations {
+  constructor(collection) {
+    super(collectionRef);
+    this.collectionRef = collectionRef;
+  }
+
+  async checkIfExists(activity) {
+    const activityRef = this.collectionRef.doc(activity);
+    return (await activityRef.get()).exists;
   }
 }
 
-export default new ActivitiesModel('activities');
+const collectionRef = db.collection('activities');
+
+export default new ActivitiesModel(collectionRef);

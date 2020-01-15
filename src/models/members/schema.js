@@ -20,6 +20,9 @@ export default {
       .email()
       .required(),
     address: Joi.string(),
+    dni: Joi.number()
+      .min(1000000)
+      .max(100000000),
   }),
   update: Joi.object({
     name: Joi.string()
@@ -40,6 +43,11 @@ export default {
   uuid: Joi.object({
     id: Joi.string()
       .guid()
+      .required(),
+  }),
+  subscribeActivity: Joi.object({
+    activities: Joi.array()
+      .items(Joi.string())
       .required(),
   }),
 };

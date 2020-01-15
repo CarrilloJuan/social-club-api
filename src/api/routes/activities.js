@@ -18,17 +18,17 @@ router.post(
 router.patch(
   '/:id',
   requestValidation(schema.update, 'body'),
-  requestValidation(schema.uuid, 'params'),
+  requestValidation(schema.id, 'params'),
   asyncError(async (req, res) => {
     const { id } = req.params;
-    await activitiesService.update({ id, ...req.body });
+    await activitiesService.update(id, req.body);
     res.status(204).end();
   }),
 );
 
 router.delete(
   '/:id',
-  requestValidation(schema.uuid, 'params'),
+  requestValidation(schema.id, 'params'),
   asyncError(async (req, res) => {
     activitiesService.remove(req.params.id);
     res.status(204).end();
@@ -44,7 +44,7 @@ router.get(
 
 router.get(
   '/:id',
-  requestValidation(schema.uuid, 'params'),
+  requestValidation(schema.id, 'params'),
   asyncError(async (req, res) => {
     const activity = await activitiesService.get(req.params.id);
     res.json({ ...activity });

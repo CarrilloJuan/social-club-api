@@ -21,7 +21,7 @@ router.patch(
   requestValidation(schema.uuid, 'params'),
   asyncError(async (req, res) => {
     const { id } = req.params;
-    await membersService.update({ id, ...req.body });
+    await membersService.update(id, req.body);
     res.status(204).end();
   }),
 );
@@ -49,5 +49,30 @@ router.get(
   }),
 );
 
+router.post(
+  '/:id/subscribe-activities',
+  requestValidation(schema.uuid, 'params'),
+  requestValidation(schema.subscribeActivity, 'body'),
+  asyncError(async (req, res) => {
+    await membersService.subscribeActivities(
+      req.params.id,
+      req.body.activities,
+    );
+    res.status(204).end();
+  }),
+);
+
+router.delete(
+  '/:id/unsubscribe-activities',
+  requestValidation(schema.uuid, 'params'),
+  requestValidation(schema.subscribeActivity, 'body'),
+  asyncError(async (req, res) => {
+    await membersService.unsubscribeActivities(
+      req.params.id,
+      req.body.activities,
+    );
+    res.status(204).end();
+  }),
+);
 
 export default router;

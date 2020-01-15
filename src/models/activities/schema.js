@@ -10,11 +10,17 @@ export default {
       .min(2)
       .max(30)
       .required(),
-    availableDays: Joi.number()
+    availableDaysPerWeek: Joi.number()
       .integer()
       .valid(1, 2, 3, 7)
       .required(),
     pricePerDay: Joi.number(),
+    timePerDay: Joi.any().allow('30m', '1h', '2h', '3h', 'unlimited'),
+    id: Joi.string()
+      .alphanum()
+      .min(2)
+      .max(30)
+      .required(),
   }),
   update: Joi.object({
     category: Joi.string().valid('sports', 'table_games', 'watersports'),
@@ -22,12 +28,17 @@ export default {
       .alphanum()
       .min(2)
       .max(30),
-    availableDays: Joi.number()
+    availableDaysPerWeek: Joi.number()
       .integer()
       .valid(1, 2, 3, 7),
     pricePerDay: Joi.string().regex(/[0-9]{10}/),
+    timePerDay: Joi.any().allow('30m', '1h', '2h', '3h', 'unlimited'),
   }),
-  uuid: Joi.object({
-    id: Joi.string().guid(),
+  id: Joi.object({
+    id: Joi.string()
+      .alphanum()
+      .min(2)
+      .max(30)
+      .required(),
   }),
 };

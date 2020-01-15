@@ -1,14 +1,13 @@
 import CustomError from '../utils/customError';
 
-export default class BasicServiceOperations {
-  // TODO: check if the model is valid
+export default class CommonsServiceOperations {
   constructor(model) {
     this.model = model;
   }
 
-  async create(resourceData) {
+  async create(resource) {
     try {
-      return await this.model.create(resourceData);
+      return await this.model.create(resource);
     } catch (error) {
       throw new CustomError(error.message, 'savingResourceDb');
     }
@@ -27,9 +26,9 @@ export default class BasicServiceOperations {
     }
   }
 
-  async update(resourceId) {
+  async update(resourceId, data) {
     try {
-      return await this.model.update(resourceId);
+      return await this.model.update(resourceId, data);
     } catch (error) {
       throw new CustomError(error.message, 'updatingResourceDb');
     }

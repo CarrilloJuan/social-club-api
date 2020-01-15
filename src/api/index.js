@@ -1,4 +1,5 @@
-import { members, activities } from './routes';
+import activities from './routes/activities';
+import members from './routes/members';
 import express from 'express';
 
 const app = express();
