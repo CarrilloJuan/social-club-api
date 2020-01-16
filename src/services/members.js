@@ -37,6 +37,14 @@ class MembersService extends CommonsServiceOperations {
       throw new CustomError(error.message, 'unsubscribingActivities');
     }
   }
+
+  async consumeActivity(memberId, consumption) {
+    try {
+      return await this.model.consumeActivity(memberId, consumption);
+    } catch (error) {
+      throw new CustomError(error.message, 'consumingActivity');
+    }
+  }
 }
 
 export default new MembersService(membersModel);

@@ -75,4 +75,14 @@ router.delete(
   }),
 );
 
+router.post(
+  '/:id/consume-activity',
+  requestValidation(schema.uuid, 'params'),
+  requestValidation(schema.consumeActivity, 'body'),
+  asyncError(async (req, res) => {
+    await membersService.consumeActivity(req.params.id, req.body);
+    res.status(204).end();
+  }),
+);
+
 export default router;

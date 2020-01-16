@@ -4,11 +4,11 @@ import CommonsModelOperations from '../commons';
 class ActivitiesModel extends CommonsModelOperations {
   constructor(collection) {
     super(collectionRef);
-    this.collectionRef = collectionRef;
+    this.activitiesRef = collectionRef;
   }
 
   async checkIfExists(activity) {
-    const activityRef = this.collectionRef.doc(activity);
+    const activityRef = this.activitiesRef.doc(activity);
     return (await activityRef.get()).exists;
   }
 }
