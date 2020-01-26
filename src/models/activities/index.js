@@ -2,7 +2,7 @@ import db from '../../db';
 import CommonsModelOperations from '../commons';
 
 class ActivitiesModel extends CommonsModelOperations {
-  constructor(collection) {
+  constructor(collectionRef) {
     super(collectionRef);
     this.activitiesRef = collectionRef;
   }
@@ -13,6 +13,6 @@ class ActivitiesModel extends CommonsModelOperations {
   }
 }
 
-const collectionRef = db.collection('activities');
+const activitiesRef = db.collection('activities');
 
-export default new ActivitiesModel(collectionRef);
+export default new ActivitiesModel(activitiesRef);

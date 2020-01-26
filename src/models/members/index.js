@@ -61,6 +61,6 @@ class MembersModel extends CommonsModelOperations {
   }
 }
 
-const collectionRef = db.collection('members');
+const membersRef = db.collection('members');
 
-export default new MembersModel(collectionRef);
+export default new MembersModel(membersRef);

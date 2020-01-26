@@ -1,6 +1,5 @@
 import { activitiesModel } from '../models';
 import CommonsServiceOperations from './commons';
-import { exitOnError } from 'winston';
 
 class ActivitiesService extends CommonsServiceOperations {
   constructor(model) {
@@ -11,7 +10,7 @@ class ActivitiesService extends CommonsServiceOperations {
   async checkAvailability(activities) {
     let exists;
     for (let activity of activities) {
-      exists = await activitiesModel.checkIfExists(activity);
+      exists = await this.model.checkIfExists(activity);
       if (exists === false) break;
     }
     return exists;

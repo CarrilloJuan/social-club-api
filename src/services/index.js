@@ -1,4 +1,5 @@
-import members from './members';
-import activities from './activities';
+import membersService from './members';
+import activitiesService from './activities';
+import usersService from './users';
 
-export { members as membersService, activities as activitiesService };
+export { membersService, activitiesService, usersService };
