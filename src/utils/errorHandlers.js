@@ -1,3 +1,4 @@
+import CustomError from './customErrors';
 import logger from './logger';
 
 export const asyncError = fn => {
@@ -10,8 +11,12 @@ export const asyncError = fn => {
 };
 
 export const errorHandler = (err, req, res, next) => {
-  logger.error(err);
-  res.status(err.httpStatusCode || 500).json({ error: err.message });
+  console.log(err);
+  if (err instanceof CustomError) {
+    err = err.buildErrorInfo();
+  }
+  logger.error(Object.assign({}, err));
+  res.status(err.httpStatusCode || 500).json({ ...err });
 };
 
 export const fatalError = err => {

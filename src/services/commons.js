@@ -1,4 +1,4 @@
-import CustomError from '../utils/customError';
+import { DataModelError } from '../utils/customErrors';
 
 export default class CommonsServiceOperations {
   constructor(model) {
@@ -9,28 +9,28 @@ export default class CommonsServiceOperations {
     try {
       return await this.model.create(resource);
     } catch (error) {
-      throw new CustomError(error.message, 'savingResourceDb');
+      throw new DataModelError(error.code, 'creating', resource.id);
     }
   }
 
-  async get(resourceId) {
+  async get(id) {
     try {
-      const resource = await this.model.get(resourceId);
+      const resource = await this.model.get(id);
       if (!resource.exists) {
         console.log('No such resource!');
       } else {
         return resource.data();
       }
     } catch (error) {
-      throw new CustomError(error.message, 'gettingResourceDb');
+      throw new CustomError(error.message, 'getting', id);
     }
   }
 
-  async update(resourceId, data) {
+  async update(id, data) {
     try {
-      return await this.model.update(resourceId, data);
+      return await this.model.update(id, data);
     } catch (error) {
-      throw new CustomError(error.message, 'updatingResourceDb');
+      throw new CustomError(error.message, 'updating', id);
     }
   }
 
@@ -38,7 +38,7 @@ export default class CommonsServiceOperations {
     try {
       return this.model.remove(id);
     } catch (error) {
-      throw new CustomError(error.message, 'removingResourceDb');
+      throw new CustomError(error.message, 'removing', id);
     }
   }
 
@@ -46,7 +46,7 @@ export default class CommonsServiceOperations {
     try {
       return await this.model.getAll();
     } catch (error) {
-      throw new CustomError(error.message, 'gettingResourcesDb');
+      throw new CustomError(error.message, 'gettingAll');
     }
   }
 }

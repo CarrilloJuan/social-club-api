@@ -7,8 +7,14 @@ import config from '../config';
 const level = process.env.LOG_LEVEL || 'debug';
 
 function formatParams(info) {
-  const { timestamp, level, message, errorType = '' } = info;
-  const log = `${timestamp} ${level}: ${errorType} ${message}`;
+  let infoMessage;
+  const { timestamp, level, message } = info;
+  if (typeof message === 'object') {
+    const { ctx, entity, errorCode } = message;
+    infoMessage = `${ctx}: ${entity} ${errorCode}`;
+  }
+  infoMessage = message;
+  const log = `${timestamp} ${level}: ${infoMessage}`;
   return info.stack ? `${log} \n ${info.stack}` : log;
 }
 

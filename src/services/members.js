@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { membersModel } from '../models';
 import CommonsServiceOperations from './commons';
-import CustomError from '../utils/customError';
+import { DataModelError } from '../utils/customErrors';
 
 class MembersService extends CommonsServiceOperations {
   constructor(model) {
@@ -18,7 +18,7 @@ class MembersService extends CommonsServiceOperations {
     try {
       return await this.model.create(data);
     } catch (error) {
-      throw new CustomError(error.message, 'savingResourceDb');
+      throw new DataModelError(error.code, 'creatingUser', id);
     }
   }
 
@@ -26,7 +26,7 @@ class MembersService extends CommonsServiceOperations {
     try {
       return await this.model.subscribeActivities(memberId, activities);
     } catch (error) {
-      throw new CustomError(error.message, 'subscribingActivities');
+      throw new DataModelError(error.code, 'subscribingActivities');
     }
   }
 
@@ -34,7 +34,7 @@ class MembersService extends CommonsServiceOperations {
     try {
       return await this.model.unsubscribeActivities(memberId, activities);
     } catch (error) {
-      throw new CustomError(error.message, 'unsubscribingActivities');
+      throw new DataModelError(error.code, 'unsubscribingActivities');
     }
   }
 
@@ -42,7 +42,7 @@ class MembersService extends CommonsServiceOperations {
     try {
       return await this.model.consumeActivity(memberId, consumption);
     } catch (error) {
-      throw new CustomError(error.message, 'consumingActivity');
+      throw new DataModelError(error.code, 'consumingActivity');
     }
   }
 }
