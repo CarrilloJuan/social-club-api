@@ -18,8 +18,3 @@ export const errorHandler = (err, req, res, next) => {
   logger.error(Object.assign({}, err));
   res.status(err.httpStatusCode || 500).json({ ...err });
 };
-
-export const fatalError = err => {
-  logger.error(`[fatal error] ${err.message}`);
-  process.exit(1);
-};
