@@ -6,15 +6,6 @@ class ActivitiesService extends CommonsServiceOperations {
     super(model);
     this.model = model;
   }
-
-  async checkAvailability(activities) {
-    let exists;
-    for (let activity of activities) {
-      exists = await this.model.checkIfExists(activity);
-      if (exists === false) break;
-    }
-    return exists;
-  }
 }
 
 export default new ActivitiesService(activitiesModel);

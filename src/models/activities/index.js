@@ -1,18 +1,17 @@
-import db from '../../db';
+import Firestore from '../../db/firestore';
 import CommonsModelOperations from '../commons';
 
 class ActivitiesModel extends CommonsModelOperations {
-  constructor(collectionRef) {
-    super(collectionRef);
-    this.activitiesRef = collectionRef;
+  constructor(dataModel) {
+    super(dataModel);
+    this.dataModel = dataModel;
   }
 
-  async checkIfExists(activity) {
-    const activityRef = this.activitiesRef.doc(activity);
-    return (await activityRef.get()).exists;
+  async checkActivity(activity) {
+    return (await this.get(activity)).exists;
   }
 }
 
-const activitiesRef = db.collection('activities');
+const dataModel = new Firestore('activities');
 
-export default new ActivitiesModel(activitiesRef);
+export default new ActivitiesModel(dataModel);

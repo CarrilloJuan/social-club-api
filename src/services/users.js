@@ -13,7 +13,7 @@ class users {
         ...userInfo,
       });
     } catch (error) {
-      throw new DataModelError('auth', 'creatingUser', error.errorInfo);
+      throw new DataModelError(error.code, 'creatingUser', error.errorInfo);
     }
   }
 
@@ -21,11 +21,7 @@ class users {
     try {
       return await this.model.getUser(userId);
     } catch (error) {
-      throw new DataModelError(
-        error.errorInfo.message,
-        error.errorInfo.code,
-        'gettingUser',
-      );
+      throw new DataModelError(error.code, 'gettingUser', error.errorInfo);
     }
   }
 
@@ -33,7 +29,7 @@ class users {
     try {
       return await this.model.updateUser(userId, { ...userData });
     } catch (error) {
-      throw new DataModelError('auth', 'updatingUser', error.errorInfo);
+      throw new DataModelError(error.code, 'updatingUser', error.errorInfo);
     }
   }
 
@@ -41,16 +37,16 @@ class users {
     try {
       return this.model.deleteUser(userId);
     } catch (error) {
-      throw new DataModelError('auth', 'removingUser', error.errorInfo);
+      throw new DataModelError(error.code, 'removingUser', error.errorInfo);
     }
   }
 
   async getAll() {
     try {
-      const listUsersResult = await this.model.listUsers();
-      return listUsersResult.users.map(userRecord => userRecord.toJSON());
+      const { users = [] } = await this.model.listUsers();
+      return users.map(userRecord => userRecord.toJSON());
     } catch (error) {
-      throw new DataModelError('auth', 'gettingUsers', error.errorInfo);
+      throw new DataModelError(error.code, 'gettingUsers', error.errorInfo);
     }
   }
 }

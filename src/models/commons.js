@@ -1,32 +1,25 @@
 export default class CommonsModelOperations {
-  constructor(collection) {
-    this.collectionRef = collection;
+  constructor(dataModel) {
+    this.dataModel = dataModel;
   }
 
   async create(resource) {
-    await this.collectionRef.doc(resource.id).create(resource);
-    return resource.id;
+    await this.dataModel.create(resource);
   }
 
   async update(resourceId, data) {
-    return await this.collectionRef.doc(resourceId).update({
-      ...data,
-    });
+    await this.dataModel.update(resourceId, data);
   }
 
   async remove(resourceId) {
-    return await this.collectionRef.doc(resourceId).delete();
+    await this.dataModel.remove(resourceId);
   }
 
   async get(resourceId) {
-    return await this.collectionRef.doc(resourceId).get();
+    return this.dataModel.get(resourceId);
   }
 
   async getAll() {
-    const resources = [];
-    (await this.collectionRef.get()).forEach(resource =>
-      resources.push(resource.data()),
-    );
-    return resources;
+    return dataModel.getAll();
   }
 }

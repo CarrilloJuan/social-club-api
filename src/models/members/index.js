@@ -1,25 +1,24 @@
-import { firestore } from 'firebase-admin';
 import ActivitiesModel from '../activities';
 import CommonsModelOperations from '../commons';
-import db from '../../db';
+import { firestore } from 'firebase-admin';
+import Firestore from '../../db/firestore';
 import { monthNames } from '../../utils/date';
 
 class MembersModel extends CommonsModelOperations {
-  constructor(collectionRef) {
-    super(collectionRef);
-    this.membersRef = collectionRef;
+  constructor(dataModel) {
+    super(dataModel);
+    this.dataModel = dataModel;
   }
 
   async subscribeActivities(memberId, activities) {
-    await db.runTransaction(async tx => {
+    await Firestore.db.runTransaction(async tx => {
       for await (const activity of activities) {
-        const activityRef = ActivitiesModel.activitiesRef.doc(activity);
-        const exists = (await tx.get(activityRef)).exists;
+        const exists = await ActivitiesModel.checkActivity(activity);
         if (!exists)
           throw new Error(`There isn\'t an activity called: ${activity}`);
       }
       return tx.update(
-        this.membersRef.doc(memberId),
+        this.dataModel.collectionRef.doc(memberId),
         'activities',
         firestore.FieldValue.arrayUnion(...activities),
       );
@@ -27,15 +26,15 @@ class MembersModel extends CommonsModelOperations {
   }
 
   async unsubscribeActivities(memberId, activities) {
-    await this.membersRef
+    await this.dataModel.collectionRef
       .doc(memberId)
       .update('activities', firestore.FieldValue.arrayRemove(...activities));
   }
 
   async consumeActivity(memberId, consumption) {
     const { activity, time } = consumption;
-    await db.runTransaction(async tx => {
-      const consumptionsCollectionRef = ActivitiesModel.activitiesRef
+    await Firestore.db.runTransaction(async tx => {
+      const consumptionsCollectionRef = ActivitiesModel.dataModel.collectionRef
         .doc(activity)
         .collection('consumptions');
       const monthlyConsumptionRef = consumptionsCollectionRef.doc(
@@ -49,7 +48,7 @@ class MembersModel extends CommonsModelOperations {
         { merge: true },
       );
       return tx.set(
-        this.membersRef.doc(memberId),
+        this.dataModel.collectionRef.doc(memberId),
         {
           consumption: {
             [activity]: firestore.FieldValue.increment(Number(time)),
@@ -61,6 +60,6 @@ class MembersModel extends CommonsModelOperations {
   }
 }
 
-const membersRef = db.collection('members');
+const dataModel = new Firestore('members');
 
-export default new MembersModel(membersRef);
+export default new MembersModel(dataModel);

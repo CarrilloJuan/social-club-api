@@ -16,7 +16,8 @@ class MembersService extends CommonsServiceOperations {
       .digest('hex');
     data.id = id;
     try {
-      return await this.model.create(data);
+      await this.model.create(data);
+      return id;
     } catch (error) {
       throw new DataModelError(error.code, 'creatingUser', id);
     }
@@ -26,7 +27,10 @@ class MembersService extends CommonsServiceOperations {
     try {
       return await this.model.subscribeActivities(memberId, activities);
     } catch (error) {
-      throw new DataModelError(error.code, 'subscribingActivities');
+      throw new DataModelError(error.code, 'subscribingActivities', {
+        message: error.message,
+        code: 'unavailable',
+      });
     }
   }
 
