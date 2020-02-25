@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { MembersService } from '../../services';
 import { members as schema } from '../../db/schemas';
-import { asyncHandler, requestValidation } from '../middlewares';
+import { asyncHandler, requestValidation, cache } from '../middlewares';
 
 const router = Router();
 
@@ -36,6 +36,7 @@ router.delete(
 
 router.get(
   '/',
+  cache('1000'),
   asyncHandler(async (_req, res) => {
     res.json(await MembersService.getAll());
   }),
@@ -43,6 +44,7 @@ router.get(
 
 router.get(
   '/:id',
+  cache('1000'),
   requestValidation(schema.uuid, 'params'),
   asyncHandler(async (req, res) => {
     const member = await MembersService.get(req.params.id);
