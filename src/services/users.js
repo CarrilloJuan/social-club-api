@@ -2,13 +2,13 @@ import admin from 'firebase-admin';
 import { DataModelError } from '../utils/customErrors';
 
 class users {
-  constructor(model) {
-    this.model = model;
+  constructor(dataModel) {
+    this.dataModel = dataModel;
   }
 
   async create(userInfo) {
     try {
-      return await this.model.createUser({
+      return await this.dataModel.createUser({
         displayName: userInfo.firstName,
         ...userInfo,
       });
@@ -19,7 +19,7 @@ class users {
 
   async get(userId) {
     try {
-      return await this.model.getUser(userId);
+      return await this.dataModel.getUser(userId);
     } catch (error) {
       throw new DataModelError(error.code, 'gettingUser', error.errorInfo);
     }
@@ -27,7 +27,7 @@ class users {
 
   async update(userId, userData) {
     try {
-      return await this.model.updateUser(userId, { ...userData });
+      return await this.dataModel.updateUser(userId, { ...userData });
     } catch (error) {
       throw new DataModelError(error.code, 'updatingUser', error.errorInfo);
     }
@@ -35,7 +35,7 @@ class users {
 
   async remove(userId) {
     try {
-      return this.model.deleteUser(userId);
+      return this.dataModel.deleteUser(userId);
     } catch (error) {
       throw new DataModelError(error.code, 'removingUser', error.errorInfo);
     }
@@ -43,7 +43,7 @@ class users {
 
   async getAll() {
     try {
-      const { users = [] } = await this.model.listUsers();
+      const { users = [] } = await this.dataModel.listUsers();
       return users.map(userRecord => userRecord.toJSON());
     } catch (error) {
       throw new DataModelError(error.code, 'gettingUsers', error.errorInfo);
@@ -51,7 +51,6 @@ class users {
   }
 }
 
-// TODO: Create a separate user model
 const usersModel = admin.auth();
 
 export default new users(usersModel);

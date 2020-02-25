@@ -1,12 +1,15 @@
 import crypto from 'crypto';
-import { membersModel } from '../models';
+import Firestore from '../db/firestore';
+import { firestore } from 'firebase-admin';
+import { ActivitiesService } from '../services';
 import CommonsServiceOperations from './commons';
 import { DataModelError } from '../utils/customErrors';
+import { monthNames } from '../utils/date';
 
 class MembersService extends CommonsServiceOperations {
   constructor(model) {
     super(model);
-    this.model = model;
+    this.dataModel = model;
   }
 
   async create(data) {
@@ -16,7 +19,7 @@ class MembersService extends CommonsServiceOperations {
       .digest('hex');
     data.id = id;
     try {
-      await this.model.create(data);
+      await this.dataModel.create(data);
       return id;
     } catch (error) {
       throw new DataModelError(error.code, 'creatingUser', id);
@@ -25,7 +28,18 @@ class MembersService extends CommonsServiceOperations {
 
   async subscribeActivities(memberId, activities) {
     try {
-      return await this.model.subscribeActivities(memberId, activities);
+      return await Firestore.db.runTransaction(async tx => {
+        for await (const activity of activities) {
+          const exists = await ActivitiesService.checkActivity(activity);
+          if (!exists)
+            throw new Error(`There isn\'t an activity called: ${activity}`);
+        }
+        return tx.update(
+          this.dataModel.collectionRef.doc(memberId),
+          'activities',
+          firestore.FieldValue.arrayUnion(...activities),
+        );
+      });
     } catch (error) {
       throw new DataModelError(error.code, 'subscribingActivities', {
         message: error.message,
@@ -36,7 +50,9 @@ class MembersService extends CommonsServiceOperations {
 
   async unsubscribeActivities(memberId, activities) {
     try {
-      return await this.model.unsubscribeActivities(memberId, activities);
+      return this.dataModel.collectionRef
+        .doc(memberId)
+        .update('activities', firestore.FieldValue.arrayRemove(...activities));
     } catch (error) {
       throw new DataModelError(error.code, 'unsubscribingActivities');
     }
@@ -44,11 +60,39 @@ class MembersService extends CommonsServiceOperations {
 
   async consumeActivity(memberId, consumption) {
     try {
-      return await this.model.consumeActivity(memberId, consumption);
+      const { activity, time } = consumption;
+      const exists = await ActivitiesService.checkActivity(activity);
+      if (!exists)
+        throw new Error(`There isn\'t an activity called: ${activity}`);
+      return await Firestore.db.runTransaction(async tx => {
+        const consumptionsCollectionRef = ActivitiesService.dataModel.collectionRef
+          .doc(activity)
+          .collection('consumptions');
+        const monthlyConsumptionRef = consumptionsCollectionRef.doc(
+          `${monthNames[new Date().getMonth()]}-${new Date().getFullYear()}`,
+        );
+        await tx.set(
+          monthlyConsumptionRef,
+          {
+            time: firestore.FieldValue.increment(Number(time)),
+          },
+          { merge: true },
+        );
+        return tx.set(
+          this.dataModel.collectionRef.doc(memberId),
+          {
+            consumption: {
+              [activity]: firestore.FieldValue.increment(Number(time)),
+            },
+          },
+          { merge: true },
+        );
+      });
     } catch (error) {
-      throw new DataModelError(error.code, 'consumingActivity');
+      throw new DataModelError(error.code, 'consumingActivity', error);
     }
   }
 }
+const dataModel = new Firestore('members');
 
-export default new MembersService(membersModel);
+export default new MembersService(dataModel);

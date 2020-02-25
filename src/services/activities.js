@@ -1,11 +1,17 @@
-import { activitiesModel } from '../models';
+import Firestore from '../db/firestore';
 import CommonsServiceOperations from './commons';
 
 class ActivitiesService extends CommonsServiceOperations {
-  constructor(model) {
-    super(model);
-    this.model = model;
+  constructor(dataModel) {
+    super(dataModel);
+    this.dataModel = dataModel;
+  }
+
+  async checkActivity(activity) {
+    return (await this.dataModel.get(activity)).exists;
   }
 }
 
-export default new ActivitiesService(activitiesModel);
+const dataModel = new Firestore('activities');
+
+export default new ActivitiesService(dataModel);

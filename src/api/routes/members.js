@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { membersService } from '../../services';
-import schema from '../../models/members/schema';
+import { MembersService } from '../../services';
+import { members as schema } from '../../db/schemas';
 import { asyncHandler, requestValidation } from '../middlewares';
 
 const router = Router();
@@ -9,7 +9,7 @@ router.post(
   '/',
   requestValidation(schema.create, 'body'),
   asyncHandler(async (req, res) => {
-    const id = await membersService.create(req.body);
+    const id = await MembersService.create(req.body);
     res.status(201).json({ id });
   }),
 );
@@ -20,7 +20,7 @@ router.patch(
   requestValidation(schema.uuid, 'params'),
   asyncHandler(async (req, res) => {
     const { id } = req.params;
-    await membersService.update(id, req.body);
+    await MembersService.update(id, req.body);
     res.status(204).end();
   }),
 );
@@ -29,21 +29,23 @@ router.delete(
   '/:id',
   requestValidation(schema.uuid, 'params'),
   asyncHandler(async (req, res) => {
-    await membersService.remove(req.params.id);
+    await MembersService.remove(req.params.id);
     res.status(204).end();
   }),
 );
 
 router.get(
   '/',
-  asyncHandler(async (_req, res) => res.json(await membersService.getAll())),
+  asyncHandler(async (_req, res) => {
+    res.json(await MembersService.getAll());
+  }),
 );
 
 router.get(
   '/:id',
   requestValidation(schema.uuid, 'params'),
   asyncHandler(async (req, res) => {
-    const member = await membersService.get(req.params.id);
+    const member = await MembersService.get(req.params.id);
     res.json({ ...member });
   }),
 );
@@ -53,7 +55,7 @@ router.post(
   requestValidation(schema.uuid, 'params'),
   requestValidation(schema.subscribeActivity, 'body'),
   asyncHandler(async (req, res) => {
-    await membersService.subscribeActivities(
+    await MembersService.subscribeActivities(
       req.params.id,
       req.body.activities,
     );
@@ -66,7 +68,7 @@ router.delete(
   requestValidation(schema.uuid, 'params'),
   requestValidation(schema.subscribeActivity, 'body'),
   asyncHandler(async (req, res) => {
-    await membersService.unsubscribeActivities(
+    await MembersService.unsubscribeActivities(
       req.params.id,
       req.body.activities,
     );
@@ -79,7 +81,7 @@ router.post(
   requestValidation(schema.uuid, 'params'),
   requestValidation(schema.consumeActivity, 'body'),
   asyncHandler(async (req, res) => {
-    await membersService.consumeActivity(req.params.id, req.body);
+    await MembersService.consumeActivity(req.params.id, req.body);
     res.status(204).end();
   }),
 );

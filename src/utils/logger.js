@@ -21,13 +21,11 @@ function formatParams(info) {
 const developmentFormat = format.combine(
   format.colorize(),
   format.errors({ stack: true }),
-  format.timestamp(),
   format.timestamp({ format: 'HH:mm:ss' }),
   format.printf(formatParams),
 );
 
 const productionFormat = format.combine(
-  format.timestamp(),
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   format.align(),
   format.printf(formatParams),

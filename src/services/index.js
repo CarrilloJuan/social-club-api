@@ -1,5 +1,5 @@
-import membersService from './members';
-import activitiesService from './activities';
-import usersService from './users';
+import MembersService from './members';
+import ActivitiesService from './activities';
+import UsersService from './users';
 
-export { membersService, activitiesService, usersService };
+export { MembersService, ActivitiesService, UsersService };

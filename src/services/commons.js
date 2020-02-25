@@ -1,52 +1,52 @@
 import { DataModelError } from '../utils/customErrors';
 
 export default class CommonsServiceOperations {
-  constructor(model) {
-    this.model = model;
+  constructor(dataModel) {
+    this.dataModel = dataModel;
   }
 
   async create(resource) {
     try {
-      return await this.model.create(resource);
+      return this.dataModel.create(resource);
     } catch (error) {
-      throw new DataModelError(error.code, 'creating', resource.id);
+      throw new DataModelError(error.code, 'creating', error, resource.id);
     }
   }
 
   async get(id) {
     try {
-      const resource = await this.model.get(id);
+      const resource = await this.dataModel.get(id);
       if (!resource.exists) {
         console.log('No such resource!');
       } else {
         return resource.data();
       }
     } catch (error) {
-      throw new CustomError(error.message, 'getting', id);
+      throw new DataModelError(error.code, 'getting', error, id);
     }
   }
 
   async update(id, data) {
     try {
-      return await this.model.update(id, data);
+      return this.dataModel.update(id, data);
     } catch (error) {
-      throw new CustomError(error.message, 'updating', id);
+      throw new DataModelError(error.code, 'updating', error, id);
     }
   }
 
   async remove(id) {
     try {
-      return this.model.remove(id);
+      return this.dataModel.remove(id);
     } catch (error) {
-      throw new CustomError(error.message, 'removing', id);
+      throw new DataModelError(error.code, 'removing', error, id);
     }
   }
 
   async getAll() {
     try {
-      return await this.model.getAll();
+      return this.dataModel.getAll();
     } catch (error) {
-      throw new CustomError(error.message, 'gettingAll');
+      throw new DataModelError(error.code, 'gettingAll', error);
     }
   }
 }
