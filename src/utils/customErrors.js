@@ -1,10 +1,11 @@
+import logger from './logger';
+
 const firestoreErrorCode = new Map([
   [2, { errorCode: 'unknown', httpStatusCode: 503, message: 'Unknown error' }],
   [
     3,
     {
       errorCode: 'invalid-argument',
-      httpStatusCode: 422,
       message: 'Client specified an invalid argument',
     },
   ],
@@ -20,7 +21,6 @@ const firestoreErrorCode = new Map([
     6,
     {
       errorCode: 'already-exists',
-      httpStatusCode: 422,
       message: 'Some document that we attempted to create already exists.',
     },
   ],
@@ -37,7 +37,6 @@ const firestoreErrorCode = new Map([
     14,
     {
       errorCode: 'unavailable',
-      httpStatusCode: 422,
       message: ' The service is currently unavailable.',
     },
   ],
@@ -68,20 +67,23 @@ export default class CustomError extends Error {
     return {
       message: this.message,
       errorCode: this.errorCode,
+      httpStatusCode: this.httpStatusCode,
     };
   }
 }
 
 export class DataModelError extends CustomError {
-  constructor(code, ctx, errorInfo, entity) {
+  constructor(firestoreCode, ctx, errorInfo, entity) {
     let message,
       errorCode,
       httpStatusCode = 422;
 
-    if (code === 'auth') {
+    if (!firestoreCode) {
       ({ message, code: errorCode } = errorInfo);
     } else {
-      ({ message, errorCode, httpStatusCode } = firestoreErrorCode.get(code));
+      ({ message, errorCode, httpStatusCode } = firestoreErrorCode.get(
+        firestoreCode,
+      ));
     }
     super(message, errorCode, httpStatusCode);
     this.title = "Data model's error";
@@ -118,5 +120,10 @@ class ValidationError {
 }
 
 const validationError = new ValidationError();
+
+export const fatalError = err => {
+  logger.error(`[fatal error] ${err.message}`);
+  process.exit(1);
+};
 
 export { validationError };

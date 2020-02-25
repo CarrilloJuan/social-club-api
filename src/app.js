@@ -2,7 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import { errorHandler, fatalError, logger } from './utils';
+import { fatalError, logger } from './utils';
+import { errorHandler } from './api/middlewares';
 import routes from './api';
 
 import config from './config';
