@@ -8,17 +8,15 @@ Se trata de un servicio para la administración de un club social, que permite r
 
 - CRUD sobre usuarios administradores del club.
 
-El servicio está construido con **express.js **y usa **firestore** como base de datos.
+El servicio está construido con **express.js** y usa **firestore** como base de datos.
 
-[**Link**](https://web.postman.co/collections/8975878-3d600e09-c130-45c4-bafd-54c471ef0abe?version=latest&workspace=0931109c-600e-4914-805c-88ca3b23392a#d7ff44a4-4560-41f4-b269-7fb474f85f8f 'Link') con algunos ejemplos para usar la api.
+[**Aqui**](https://web.postman.co/collections/8975878-3d600e09-c130-45c4-bafd-54c471ef0abe?version=latest&workspace=0931109c-600e-4914-805c-88ca3b23392a#d7ff44a4-4560-41f4-b269-7fb474f85f8f 'Aqui') podrás encontrar algunos ejemplos y documentación sobre como funciona el servicio.
 
-Para configurar el servicio debes crear una cuenta en firebase, descargar las credenciales de la cuenta de servicio, y agregar el path de estas en el .env
+Para configurarlo debes crear una cuenta en firebase, descargar las credenciales de la cuenta de servicio, y agregar el path de estas en el .env
 
 **TODO:**
 
 [ ] Agregar un servicio de pagos
-
-[ ] Servicio de notificaciones
 
 [ ] Test
 
