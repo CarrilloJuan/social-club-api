@@ -52,7 +52,7 @@ const firestoreErrorCode = new Map([
 ]);
 
 export default class CustomError extends Error {
-  constructor(message, errorCode, httpStatusCode) {
+  constructor(message, errorCode, httpStatusCode = 422) {
     super(message);
     this.message = message;
     this.errorCode = errorCode;
@@ -74,18 +74,17 @@ export default class CustomError extends Error {
 
 export class DataModelError extends CustomError {
   constructor(firestoreCode, ctx, errorInfo, entity) {
-    let message,
-      errorCode,
-      httpStatusCode = 422;
-
-    if (!firestoreCode) {
+    let message, errorCode, httpStatusCode;
+    if (!firestoreCode || typeof firestoreCode === 'string') {
       ({ message, code: errorCode } = errorInfo);
     } else {
       ({ message, errorCode, httpStatusCode } = firestoreErrorCode.get(
         firestoreCode,
       ));
     }
+
     super(message, errorCode, httpStatusCode);
+
     this.title = "Data model's error";
     this.ctx = ctx;
     this.entity = entity;
@@ -98,6 +97,7 @@ export class DataModelError extends CustomError {
       errorCode: this.errorCode,
       ctx: this.ctx,
       entity: this.entity,
+      httpStatusCode: this.httpStatusCode,
     };
   }
 }

@@ -7,7 +7,8 @@ export default class CommonsServiceOperations {
 
   async create(resource) {
     try {
-      return this.dataModel.create(resource);
+      await this.dataModel.create(resource);
+      return resource.id;
     } catch (error) {
       throw new DataModelError(error.code, 'creating', error, resource.id);
     }
@@ -17,7 +18,7 @@ export default class CommonsServiceOperations {
     try {
       const resource = await this.dataModel.get(id);
       if (!resource.exists) {
-        console.log('No such resource!');
+        throw new Error('No such resource!');
       } else {
         return resource.data();
       }
@@ -26,9 +27,10 @@ export default class CommonsServiceOperations {
     }
   }
 
+  // TODO: check if exists
   async update(id, data) {
     try {
-      return this.dataModel.update(id, data);
+      return await this.dataModel.update(id, data);
     } catch (error) {
       throw new DataModelError(error.code, 'updating', error, id);
     }
@@ -36,7 +38,7 @@ export default class CommonsServiceOperations {
 
   async remove(id) {
     try {
-      return this.dataModel.remove(id);
+      return await this.dataModel.remove(id);
     } catch (error) {
       throw new DataModelError(error.code, 'removing', error, id);
     }
@@ -44,7 +46,7 @@ export default class CommonsServiceOperations {
 
   async getAll() {
     try {
-      return this.dataModel.getAll();
+      return await this.dataModel.getAll();
     } catch (error) {
       throw new DataModelError(error.code, 'gettingAll', error);
     }

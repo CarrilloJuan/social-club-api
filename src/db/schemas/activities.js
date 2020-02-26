@@ -15,7 +15,7 @@ export default {
       .valid(1, 2, 3, 7)
       .required(),
     pricePerDay: Joi.number(),
-    timePerDayinMinutes: Joi.any().allow('30', '60', '120', '180'),
+    timePerDay: Joi.any().allow('30', '60', '120', '180'),
     id: Joi.string()
       .alphanum()
       .min(2)
@@ -32,7 +32,7 @@ export default {
       .integer()
       .valid(1, 2, 3, 7),
     pricePerDay: Joi.string().regex(/[0-9]{10}/),
-    timePerDayinMinutes: Joi.any().allow('30m', '1h', '2h', '3h'),
+    timePerDay: Joi.any().allow('30m', '1h', '2h', '3h'),
   }),
   id: Joi.object({
     id: Joi.string()

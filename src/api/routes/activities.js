@@ -36,7 +36,7 @@ router.delete(
 
 router.get(
   '/',
-  cache('1000'),
+  cache('10'),
   asyncHandler(async (_req, res) => {
     res.json(await ActivitiesService.getAll());
   }),
@@ -44,7 +44,7 @@ router.get(
 
 router.get(
   '/:id',
-  cache('1000'),
+  cache('10'),
   requestValidation(schema.id, 'params'),
   asyncHandler(async (req, res) => {
     const activity = await ActivitiesService.get(req.params.id);

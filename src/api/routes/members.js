@@ -36,7 +36,7 @@ router.delete(
 
 router.get(
   '/',
-  cache('1000'),
+  cache('10'),
   asyncHandler(async (_req, res) => {
     res.json(await MembersService.getAll());
   }),
@@ -44,7 +44,7 @@ router.get(
 
 router.get(
   '/:id',
-  cache('1000'),
+  cache('10'),
   requestValidation(schema.uuid, 'params'),
   asyncHandler(async (req, res) => {
     const member = await MembersService.get(req.params.id);
